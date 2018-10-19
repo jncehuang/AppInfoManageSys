@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.appsys.dao.devuser.DevUserMapper">
+	<insert id="addDevUser" parameterType="devUser">
+		insert into dev_user (devCode, devName, devPassword, devEmail, devInfo, createdBy, creationDate, modifyBy, modifyDate) values (#{devCode},#{devName},#{devPassword},#{devEmail},#{devInfo},#{createdBy},#{creationDate},#{modifyBy},#{modifyDate})
+	</insert>
+	<update id="modifyBackendUser" parameterType="devUser">
+	  	update dev_user set devName = #{devName},devCode = #{devCode},devEmail = #{devEmail},devInfo = #{devInfo},createdBy = #{createdBy},creationDate = #{creationDate},modifyBy = #{modifyBy},modifyDate =#{modifyDate} where id = #{id} ;
+	</update>
+	<delete id="delDevUser" parameterType="Integer">
+		DELETE from dev_user where id = #{id}
+	</delete>
+    <select id="getLoginUser" resultType="devUser">
+		select u.* from dev_user u
+		<trim prefix="where" prefixOverrides="and | or">
+			<if test="devCode != null">
+				and u.devCode = #{devCode}
+			</if>
+		</trim>
+	</select>
+	<select id="getDevUserList" resultType="devUser">
+		select * from dev_user
+		<trim prefix="where" prefixOverrides="and | or">
+			<if test="devName != null">
+				and devName like CONCAT('%',#{devName},'%')
+			</if>
+		</trim>
+		 limit #{from},#{pageSize}
+	</select>
+	<select id="getDevUserCount" resultType="int">
+		select count(*) from dev_user
+		<trim prefix="where" prefixOverrides="and | or">
+			<if test="devName != null">
+				and devName like CONCAT('%',#{devName},'%')
+			</if>
+		</trim>
+	</select>
+	<select id="getLoginUserForView" resultType="devUser">
+		select * from dev_user where id = #{id}
+	</select>
+    <select id="getBackEnd" resultType="BackendUser">
+  		 select * from backend_user
+	</select>
+</mapper>

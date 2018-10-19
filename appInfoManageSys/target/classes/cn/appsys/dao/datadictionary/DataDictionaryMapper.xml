@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.appsys.dao.datadictionary.DataDictionaryMapper">
+    <insert id="addDataDictionary" parameterType="dataDictionary">
+		insert into data_dictionary (typeCode, typeName, valueId, valueName, createdBy, creationDate, modifyBy, modifyDate) values (#{typeCode},#{typeName},#{valueId},#{valueName},#{createdBy},#{creationDate},#{modifyBy},#{modifyDate})
+	</insert>
+	<update id="datadictionaryUpdate" parameterType="dataDictionary">
+		update data_dictionary set typeCode = #{typeCode},typeName = #{typeName},valueId =#{valueId},valueName = #{valueName},createdBy = #{createdBy},creationDate = #{creationDate},modifyBy = #{modifyBy},modifyDate = #{modifyDate} where id = #{id};
+	</update>
+
+	<select id="getDataDictionaryList" resultType="DataDictionary">
+		SELECT distinct(typeName) FROM data_dictionary
+        <trim prefix="where" prefixOverrides="and | or">
+            <if test="typeCode != null">
+                and typeCode like CONCAT('%',#{typeCode},'%')
+            </if>
+        </trim>
+	</select>
+	<select id="getDataList" resultType="dataDictionary">
+		select * from data_dictionary
+		<trim prefix="where" prefixOverrides="and | or">
+			<if test="typeName != null">
+				and typeName like CONCAT('%',#{typeName},'%')
+			</if>
+		</trim>
+		limit #{from},#{pageSize}
+	</select>
+	<select id="getDataListCount" resultType="int">
+		select count(*) from data_dictionary
+		<trim prefix="where" prefixOverrides="and | or">
+			<if test="typeName != null">
+				and typeName like CONCAT('%',#{typeName},'%')
+			</if>
+		</trim>
+	</select>
+	<select id="getDataListForView" resultType="dataDictionary">
+		select * from data_dictionary where id = #{id};
+	</select>
+	<select id="CheckDataTypeName" resultType="int">
+	  	select count(*) from data_dictionary
+		<trim prefix="where" prefixOverrides="and | or">
+			<if test="typeName != null">
+				and typeName like CONCAT('%',#{typeName},'%')
+			</if>
+			<if test="typeName == null">
+				and typeName  = '无'
+			</if>
+		</trim>
+	</select>
+	<select id="CheckDataTypeCode" resultType="int">
+		select count(*) from data_dictionary
+		<trim prefix="where" prefixOverrides="and | or">
+			<if test="typeCode != null">
+				and typeCode like CONCAT('%',#{typeCode},'%')
+			</if>
+			<if test="typeCode == null">
+				and typeCode  = '无'
+			</if>
+		</trim>
+	</select>
+	<select id="datadictionaryForByTypeCodeByTypeName" resultType="dataDictionary">
+		select distinct(typeCode) from data_dictionary where typeName = #{typeName}
+	</select>
+	<select id="loadValuesId" resultType="int">
+		select count(*) from data_dictionary where typeName = #{typeName} and valueId = #{valueId}
+	</select>
+	<select id="datadictionaryForByTypeCodeById" resultType="dataDictionary">
+		select * from data_dictionary where id = #{id}
+	</select>
+    <select id="getDataDictionaryListForAll" resultType="dataDictionary">
+        select * from data_dictionary
+        <trim prefix="where" prefixOverrides="and | or">
+            <if test="typeCode != null">
+                and typeCode  = #{typeCode}
+            </if>
+        </trim>
+    </select>
+</mapper>
